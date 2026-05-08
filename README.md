@@ -1,142 +1,183 @@
-# 🖼️ ClarityForge AI
+# ClarityForge AI
 
-**ClarityForge AI** is a professional Python desktop application for enhancing low-quality, pixelated, or blurry images using **Real-ESRGAN AI upscaling** with optional **GFPGAN face restoration**.
+ClarityForge AI is a professional Python desktop app for enhancing low-quality, pixelated, or blurry images with Real-ESRGAN AI upscaling and optional GFPGAN face restoration.
 
-It is designed to upscale images, reduce visual artifacts, improve clarity, and export enhanced images in high resolution.
+## What The Enhance Button Does
 
----
+The **Enhance Image** button runs Real-ESRGAN inference. It does not use `cv2.resize()` or Pillow resizing as the main enhancement path.
 
-## ✨ Features
+After Real-ESRGAN finishes, the app can apply optional OpenCV finishing:
 
-- 🖥️ Modern dark-themed **PySide6** desktop interface
-- 🖼️ Before and after image preview panels
-- 🤖 Real AI upscaling with **Real-ESRGAN**
-- 🔍 Upscale modes: `2x`, `4x`, and `4K target`
-- 🧠 Model selector:
-  - `realesr-general-x4v3`
-  - `RealESRGAN_x4plus`
-- 😀 Optional **GFPGAN face enhancement**
-- 🛡️ Safe Mode for very small, blurry, low-quality, or silhouette images
-- ⚡ CUDA GPU auto-detection for supported NVIDIA GPUs
-- 🐢 CPU fallback when CUDA is unavailable
-- 🎚️ Optional OpenCV finishing tools:
-  - Denoise
-  - Sharpen
-  - Contrast
-  - Color boost
-- 📤 Export enhanced images as PNG or JPG
-- ✅ Clear error messages when required model files are missing
+- Denoise
+- Sharpen
+- Contrast
+- Color boost
 
----
+## Features
 
-## 📷 Preview
+- Modern dark PySide6 desktop interface
+- Before and after image preview panels
+- Real-ESRGAN upscale modes: `2x`, `4x`, and `4K target`
+- Model selector for `realesr-general-x4v3` and `RealESRGAN_x4plus`
+- Optional GFPGAN face enhancement only when a face is detected
+- Safe Mode for very small, blurry, low-quality images and silhouettes
+- CUDA GPU auto-detection when PyTorch can access a compatible NVIDIA GPU
+- CPU fallback when CUDA is unavailable
+- PNG and JPG export
+- Clear error message when Real-ESRGAN model weights are missing
 
-> ![ClarityForge Preview](https://github.com/EnukaSathmina/ClarityForge-AI/blob/main/img.png?raw=true)
-
----
-
-## 🚀 What The Enhance Button Does
-
-The **Enhance Image** button runs real **Real-ESRGAN inference**.
-
-It does **not** use `cv2.resize()` or Pillow resizing as the main enhancement method.
-
-Processing flow:
+## Folder Structure
 
 ```text
-Original image
-↓
-Real-ESRGAN AI upscaling
-↓
-Optional denoise / sharpen / contrast / color boost
-↓
-Optional 4K target resize
-↓
-Export PNG or JPG
+ClarityForge/
+|-- main.py
+|-- requirements.txt
+|-- README.md
+|-- models/
+|-- output/
+`-- assets/
 ```
 
-## 🧠 AI Models Used
+## Setup
 
-ClarityForge AI uses **Real-ESRGAN** for AI image upscaling and optional **GFPGAN** for face restoration.
+Create and activate a virtual environment:
 
-| Model | Type | Best For |
-|---|---|---|
-| `realesr-general-x4v3` | Upscaling | General images, safer results, fewer artifacts |
-| `RealESRGAN_x4plus` | Upscaling | Higher-quality 4x enhancement for detailed images |
-| `GFPGANv1.4` | Face Restoration | Improving visible human faces |
-
-> **Note:** Face enhancement works best only when a clear face is visible.  
-> For landscapes, sunsets, silhouettes, and non-face images, keep face enhancement disabled or use **Safe Mode**.
-
-###⚠️ Important Note About AI Restoration
-
-- ClarityForge AI can improve image quality, but it cannot perfectly recover details that do not exist in the original image.
-
-- Very low-resolution images may produce AI-generated artifacts because the AI has to guess missing details.
-
-- Best results come from images that are low-quality but still contain some visible structure and detail.
-
-# 🛠️ Setup
-
-Follow these steps to run **ClarityForge AI** on your PC.
-
-### 1️⃣ Clone the repository
-
-```bash
-git clone https://github.com/your-username/ClarityForge.git
-cd ClarityForge
-```
-### 2️⃣ Create a virtual environment
 ```bash
 python -m venv .venv
-```
-### 3️⃣ Activate the virtual environment
-
-Windows:
-```bash
 .venv\Scripts\activate
 ```
 
-Linux / macOS:
+Install dependencies:
+
 ```bash
-source .venv/bin/activate
-```
-### 4️⃣ Install dependencies
-```bash
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
-### 5️⃣ Download AI model weights
+If you already installed dependencies and see a NumPy error such as
+`RuntimeError: Numpy is not available` or `_ARRAY_API not found`, downgrade
+NumPy in the same Python environment:
 
-Place the Real-ESRGAN model inside the models/ folder.
+```bash
+python -m pip install --force-reinstall "numpy>=1.24,<2"
+```
 
-Recommended model:
+For CUDA acceleration, install the PyTorch build that matches your CUDA version from the official PyTorch instructions:
 
-- models/realesr-general-x4v3.pth
+https://pytorch.org/get-started/locally/
 
-Optional face restoration model:
+## Download Real-ESRGAN Model Weights
 
-- models/GFPGANv1.4.pth
+Download at least one Real-ESRGAN upscaler model and place it in the `models/` folder.
 
-You can download models manually or run:
+Fastest option:
 
-- python download_models.py general
+```bash
+py download_models.py general
+```
 
-To download all supported models:
+To download every supported model, including optional face restoration:
 
-- python download_models.py --all
-### 6️⃣ Run the app
+```bash
+py download_models.py --all
+```
+
+Recommended general model:
+
+```text
+models/realesr-general-x4v3.pth
+```
+
+Download:
+
+```text
+https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesr-general-x4v3.pth
+```
+
+Higher-quality x4plus model:
+
+```text
+models/RealESRGAN_x4plus.pth
+```
+
+Download:
+
+```text
+https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth
+```
+
+The app defaults to `realesr-general-x4v3` for general images. Use the Model selector to choose `RealESRGAN_x4plus`.
+
+## Optional Face Restoration Weights
+
+For face enhancement, place GFPGAN weights here:
+
+```text
+models/GFPGANv1.4.pth
+```
+
+Download:
+
+```text
+https://github.com/TencentARC/GFPGAN/releases/download/v1.3.4/GFPGANv1.4.pth
+```
+
+Face enhancement is optional. Real-ESRGAN upscaling requires one of the Real-ESRGAN model files above.
+
+## Run
+
 ```bash
 python main.py
 ```
 
-## ⚡ GPU Support
+## Windows EXE
 
-For NVIDIA GPU acceleration, install a CUDA-supported PyTorch version from the official PyTorch website.
+A packaged Windows build is created here:
 
-Example for CUDA 11.8:
-```bash
-python -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+```text
+dist/ClarityForge AI/ClarityForge AI.exe
 ```
-If CUDA is not available, the app will automatically run on CPU.
+
+Run the app by opening:
+
+```text
+dist\ClarityForge AI\ClarityForge AI.exe
+```
+
+Keep the full `dist/ClarityForge AI/` folder together. The EXE depends on the bundled `_internal/` folder and bundled model files.
+
+Enhanced exports are saved by default to:
+
+```text
+dist/ClarityForge AI/output/
+```
+
+## Build The EXE
+
+Install PyInstaller in the same Python environment:
+
+```bash
+python -m pip install pyinstaller
+```
+
+Build from the project root:
+
+```bash
+python -m PyInstaller --noconfirm --windowed --name "ClarityForge AI" --icon icon.ico --add-data "icon.ico;." --add-data "models;models" main.py
+```
+
+After the first build, you can rebuild from the generated spec file:
+
+```bash
+python -m PyInstaller --noconfirm "ClarityForge AI.spec"
+```
+
+## Notes
+
+- Large 4K exports can use significant memory, especially on CPU.
+- If no Real-ESRGAN model file exists in `models/`, processing stops with an error instead of silently resizing the image.
+- If CUDA is available, the app uses GPU half precision. Otherwise, it runs on CPU.
+- Very low-resolution images may produce AI-generated artifacts because missing details must be guessed.
+- For silhouette, sunset, landscape, and other non-face images, leave face enhancement off or use Safe Mode. The app also skips GFPGAN automatically when no face is detected.
+- Safe Mode forces conservative 2x output, disables face restoration, uses low denoise, very low sharpening, and very low contrast.
+- Very small or blurry uploads automatically switch to Safe Mode and 2x output. Choosing `4x` or `4K target` turns Safe Mode off.
+- `4K target` runs Real-ESRGAN x4 directly on the original image first, then resizes the enhanced output to a 3840px long edge while keeping aspect ratio.
