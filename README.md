@@ -1,6 +1,3 @@
-@ -1,2 +1,142 @@
-# ClarityForge-AI
-ClarityForge AI is a professional Python desktop app for enhancing low-quality, pixelated, or blurry images with Real-ESRGAN AI upscaling and optional GFPGAN face restoration.
 # 🖼️ ClarityForge AI
 
 **ClarityForge AI** is a professional Python desktop application for enhancing low-quality, pixelated, or blurry images using **Real-ESRGAN AI upscaling** with optional **GFPGAN face restoration**.
