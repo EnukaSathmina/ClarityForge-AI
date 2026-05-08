@@ -133,7 +133,7 @@ python main.py
 
 ## ⚡ GPU Support
 
-For NVIDIA GPU acceleration, install a CUDA-supported PyTorch version from the official PyTorch website.
+- For NVIDIA GPU acceleration, install a CUDA-supported PyTorch version from the official PyTorch website.
 
 Example for CUDA 11.8:
 ```bash
